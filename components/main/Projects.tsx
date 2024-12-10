@@ -19,7 +19,7 @@ const Projects = () => {
         <ProjectCard
           src="/foodorder.png"
           title="Food Order Website"
-          description="This is a fullstack project. Where frontend is created by react and backend used is Node, Expressjs and mongodb. "
+          description="This is a fullstack project. Where frontend is created by react and backend used is Node, Expressjs and mongodb. Deployed using Nginx"
         />
         <ProjectCard
           src="/nikedash.png"
