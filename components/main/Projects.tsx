@@ -14,17 +14,17 @@ const Projects = () => {
         <ProjectCard
           src="/reactsocialmedia1.png"
           title="Social Media Platform"
-          description="It has been"
+          description="FreeLance Project worked using react-native so it can be displayed in mobile (android/ios) as well as web. More of just UI no backend involved."
         />
         <ProjectCard
           src="/foodorder.png"
           title="Food Order Website"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          description="This is a fullstack project. Where frontend is created by react and backend used is Node, Expressjs and mongodb. "
         />
         <ProjectCard
           src="/nikedash.png"
           title="Inspired Nike Analytics"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          description="The dashboard is developed using typescript. Frontend React while backend used is nestjs which is a upcoming secure framework"
         />
       </div>
     </div>
