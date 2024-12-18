@@ -13,18 +13,19 @@ const Navbar = () => {
           <Image
             src="/NavLogo.png"
             alt="logo"
-            width={70}
-            height={70}
-            className="cursor-pointer hover:animate-slowspin"
+            width={100}
+            height={100}
+            className="cursor-pointer hover:animate-slowspin md:w-[70px] md:h-[70px]"
           />
 
           <span className="font-bold ml-[10px] hidden md:block text-gray-300">
+            {/* Deadsec text is hidden on mobile */}
             Deadsec
           </span>
         </a>
 
         <div className="w-[500px] h-full flex flex-row items-center justify-between md:mr-20">
-          <div className="flex items-center justify-between w-full h-auto border border-[#7042f861] bg-[#0300145e] mr-[15px] px-[20px] py-[10px] rounded-full text-gray-200">
+          <div className="hidden md:flex items-center justify-between w-full h-auto border border-[#7042f861] bg-[#0300145e] mr-[15px] px-[20px] py-[10px] rounded-full text-gray-200">
             <a href="#about-me" className="cursor-pointer">
               About me
             </a>
