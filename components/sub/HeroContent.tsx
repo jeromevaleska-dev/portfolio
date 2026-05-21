@@ -875,7 +875,7 @@ const HeroContent = () => {
         flexDirection: "column",
         width: "100%",
         minHeight: "calc(100vh - 65px)",
-        padding: "40px 0 0",
+        padding: "105px 0 0",
       }}
     >
       <HeroBackdrop />
