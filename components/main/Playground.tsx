@@ -716,7 +716,7 @@ const Playground = () => {
   const { lines, plain } = useMemo(() => generateCode(shapes), [shapes]);
 
   return (
-    <section id="playground" style={{ padding: "60px 80px", position: "relative", zIndex: 2 }}>
+    <section id="playground" className="pf-section">
       <div
         aria-hidden="true"
         style={{
@@ -767,16 +767,7 @@ const Playground = () => {
         }}
       >
         <div style={{ maxWidth: 640 }}>
-          <h2
-            style={{
-              fontSize: 48,
-              fontWeight: 800,
-              letterSpacing: "-0.03em",
-              color: "var(--fg-1)",
-              margin: 0,
-              lineHeight: 1.05,
-            }}
-          >
+          <h2 className="pf-section-headline">
             Live design playground.
             <br />
             <span className="text-gradient-projects">The component writes itself.</span>
@@ -794,14 +785,7 @@ const Playground = () => {
         </div>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "240px 1fr 1fr",
-          gap: 18,
-          alignItems: "stretch",
-        }}
-      >
+      <div className="pf-playground-grid">
         <PaletteRail
           onAdd={onAdd}
           selected={selected}

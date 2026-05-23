@@ -454,7 +454,7 @@ function CaseStudyModal({ project, onClose }: { project: Project; onClose: () =>
             </div>
           )}
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, marginBottom: 36 }}>
+          <div className="pf-case-grid">
             <CaseSection label="The problem" body={project.problem} />
             <CaseSection label="The shape of the solution" body={project.solution} />
           </div>
@@ -599,7 +599,7 @@ const Projects = () => {
   const visible = filter === "all" ? PROJECTS : PROJECTS.filter((p) => p.category === filter);
 
   return (
-    <section id="projects" style={{ padding: "60px 80px", position: "relative", zIndex: 2 }}>
+    <section id="projects" className="pf-section">
       <div
         style={{
           display: "flex",

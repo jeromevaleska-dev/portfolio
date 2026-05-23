@@ -607,7 +607,7 @@ function ContactForm() {
 
 const EmailSection = () => {
   return (
-    <section id="contact" style={{ padding: "60px 80px", position: "relative", zIndex: 2 }}>
+    <section id="contact" className="pf-section">
       <div
         style={{
           display: "flex",
@@ -639,13 +639,7 @@ const EmailSection = () => {
         The form below works. The page reacts as you type — typos get caught, presets are one tap away. Try it.
       </p>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 1fr)",
-          gap: 32,
-        }}
-      >
+      <div className="pf-contact-grid">
         <ContactForm />
         <SignalPanel />
       </div>

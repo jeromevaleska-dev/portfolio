@@ -357,13 +357,11 @@ const Skills = () => {
   return (
     <section
       id="skills"
+      className="pf-section"
       style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        position: "relative",
-        padding: "60px 80px",
-        zIndex: 2,
       }}
     >
       <div

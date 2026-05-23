@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { id: "about-me", label: "About" },
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
+  { id: "playground", label: "Playground" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -132,6 +133,19 @@ function NavLinks() {
           }}
         >
           {item.label}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+  return (
+    <div className={"pf-mobile-menu" + (open ? " open" : "")}>
+      {NAV_ITEMS.map((item, i) => (
+        <a key={item.id} href={"#" + item.id} onClick={onClose}>
+          {item.label}
+          <span className="idx">0{i + 1}</span>
         </a>
       ))}
     </div>
@@ -303,6 +317,7 @@ function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void 
 
 const Navbar = () => {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -316,6 +331,19 @@ const Navbar = () => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [paletteOpen]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 860) setMobileOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
 
   return (
     <>
@@ -373,9 +401,13 @@ const Navbar = () => {
             </span>
           </a>
 
-          <NavLinks />
+          {/* Desktop nav pill */}
+          <div className="pf-desktop-only">
+            <NavLinks />
+          </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          {/* Desktop ⌘K button */}
+          <div className="pf-desktop-only" style={{ alignItems: "center", gap: 14 }}>
             <button
               onClick={() => setPaletteOpen(true)}
               aria-label="Open command palette"
@@ -422,9 +454,22 @@ const Navbar = () => {
               </kbd>
             </button>
           </div>
+
+          {/* Mobile hamburger */}
+          <button
+            className={"pf-burger pf-mobile-only" + (mobileOpen ? " open" : "")}
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
         <ScrollProgress />
       </header>
+      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </>
   );

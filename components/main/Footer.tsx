@@ -114,23 +114,8 @@ const Footer = () => {
   ];
 
   return (
-    <footer
-      style={{
-        position: "relative",
-        padding: "60px 80px 40px",
-        borderTop: "1px solid var(--border-soft)",
-        marginTop: 60,
-        color: "var(--fg-2)",
-      }}
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 1fr)",
-          gap: 40,
-          alignItems: "start",
-        }}
-      >
+    <footer className="pf-footer">
+      <div className="pf-footer-grid">
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
