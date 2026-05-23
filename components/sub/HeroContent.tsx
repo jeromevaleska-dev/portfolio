@@ -628,7 +628,7 @@ function LivePreview({ state }: { state: PreviewState }) {
             minHeight: "1.4em",
           }}
         >
-          {roles.length === 0 && <span style={{ color: "var(--fg-disabled)" }}>// roles[]</span>}
+          {roles.length === 0 && <span style={{ color: "var(--fg-disabled)" }}>{"// roles[]"}</span>}
           {roles.length > 0 && roles.length < 4 && (
             <span style={{ animation: "pf-fade-in 350ms ease-out both" }} key={roles[roles.length - 1]}>
               {roles[roles.length - 1]}

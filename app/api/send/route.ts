@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const fromEmail = process.env.FROM_EMAIL;
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
     const { email, subject, message } = await req.json();
-    
+
     if (!email || !subject || !message) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -15,19 +14,17 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!fromEmail) {
+    const fromEmail = process.env.FROM_EMAIL;
+    const apiKey = process.env.RESEND_API_KEY;
+
+    if (!fromEmail || !apiKey) {
       return NextResponse.json(
         { error: 'Server configuration error' },
         { status: 500 }
       );
     }
 
-    if (!process.env.RESEND_API_KEY) {
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      );
-    }
+    const resend = new Resend(apiKey);
 
     const data = await resend.emails.send({
       from: fromEmail,
