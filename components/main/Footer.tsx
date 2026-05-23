@@ -139,7 +139,7 @@ const Footer = () => {
                   letterSpacing: "0.04em",
                 }}
               >
-                Deepak Aravindan · Fullstack + Design
+                Deepak Aravindan · Fullstack + Design + AI
               </div>
             </div>
           </div>

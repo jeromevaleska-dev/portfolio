@@ -12,6 +12,7 @@ const me: Developer = {
     "Web Developer",
     "Mobile Developer",
     "UI/UX Designer",
+    "AI Developer",
   ],
   stack: ["TypeScript", "React", "Next.js", "Node.js"],
   available: true,
@@ -365,6 +366,7 @@ function derivePreviewState(typedText: string): PreviewState {
   if (has('"Web Developer"')) roles.push("Web Developer");
   if (has('"Mobile Developer"')) roles.push("Mobile Developer");
   if (has('"UI/UX Designer"')) roles.push("UI/UX Designer");
+  if (has('"AI Developer"')) roles.push("AI Developer");
   return {
     hasName: has('"Deepak Aravindan"'),
     roles,
@@ -627,12 +629,12 @@ function LivePreview({ state }: { state: PreviewState }) {
           }}
         >
           {roles.length === 0 && <span style={{ color: "var(--fg-disabled)" }}>// roles[]</span>}
-          {roles.length > 0 && roles.length < 3 && (
+          {roles.length > 0 && roles.length < 4 && (
             <span style={{ animation: "pf-fade-in 350ms ease-out both" }} key={roles[roles.length - 1]}>
               {roles[roles.length - 1]}
             </span>
           )}
-          {roles.length === 3 && (
+          {roles.length === 4 && (
             <span style={{ color: "var(--lavender)" }}>
               <TypeCycle sequence={roles} speed={70} hold={1400} />
             </span>
