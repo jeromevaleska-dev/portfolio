@@ -108,7 +108,7 @@ function BuildLog() {
 const Footer = () => {
   const socials = [
     { href: "https://github.com/Deepak15deadsec", src: "/github-icon.svg", label: "GitHub" },
-    { href: "https://in.linkedin.com/in/deepak-aravindan-516919237", src: "/linkedin-icon.svg", label: "LinkedIn" },
+    { href: "https://www.linkedin.com/in/deepak-aravindan-516919237/", src: "/linkedin-icon.svg", label: "LinkedIn" },
     { href: "#", src: "/instagram.svg", label: "Instagram" },
     { href: "#", src: "/discord.svg", label: "Discord" },
   ];

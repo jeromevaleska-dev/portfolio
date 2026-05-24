@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import NowTicker from "./NowTicker";
 
 // ---- The "source code" that gets typed out ----------------------------
 const SOURCE_CODE = `// about.tsx
@@ -933,6 +934,10 @@ const HeroContent = () => {
             building itself — watch the code on the left compile into the preview
             on the right.
           </p>
+        </div>
+
+        <div style={{ marginTop: 4 }}>
+          <NowTicker />
         </div>
 
         <div

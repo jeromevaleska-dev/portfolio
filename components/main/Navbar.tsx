@@ -175,7 +175,7 @@ function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void 
     { id: "theme-mono", label: "Switch theme → Mono", hint: "⌘3", run: () => document.documentElement.setAttribute("data-theme", "mono") },
     { id: "resume", label: "Download resume", hint: ".pdf", run: () => window.open("/ai-resume.pdf", "_blank") },
     { id: "github", label: "Open GitHub profile", hint: "↗", run: () => window.open("https://github.com/Deepak15deadsec", "_blank") },
-    { id: "linkedin", label: "Open LinkedIn profile", hint: "↗", run: () => window.open("https://in.linkedin.com/in/deepak-aravindan-516919237", "_blank") },
+    { id: "linkedin", label: "Open LinkedIn profile", hint: "↗", run: () => window.open("https://www.linkedin.com/in/deepak-aravindan-516919237/", "_blank") },
   ];
 
   const filtered = query

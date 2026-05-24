@@ -432,7 +432,7 @@ function SignalPanel() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <ChannelLink
-            href="mailto:hello@deadsec.dev"
+            href="mailto:deepsprojects10@gmail.com"
             icon={
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -440,7 +440,7 @@ function SignalPanel() {
               </svg>
             }
             label="Email"
-            value="hello@deadsec.dev"
+            value="deepsprojects10@gmail.com"
           />
           <ChannelLink
             href="https://github.com/Deepak15deadsec"
@@ -450,7 +450,7 @@ function SignalPanel() {
             value="github.com/Deepak15deadsec"
           />
           <ChannelLink
-            href="https://in.linkedin.com/in/deepak-aravindan-516919237"
+            href="https://www.linkedin.com/in/deepak-aravindan-516919237/"
             // eslint-disable-next-line @next/next/no-img-element
             icon={<img src="/linkedin-icon.svg" alt="" style={{ width: 14, height: 14 }} />}
             label="LinkedIn"
