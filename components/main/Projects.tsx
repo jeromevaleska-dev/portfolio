@@ -8,7 +8,7 @@ type Project = {
   subtitle: string;
   year: string;
   tags: string[];
-  category: "design" | "engineering" | "fullstack";
+  category: "design" | "engineering" | "fullstack" | "ai";
   image: string | null;
   shortDesc: string;
   problem: string;
@@ -18,9 +18,88 @@ type Project = {
   process: string[];
   challenge: string;
   flag?: string;
+  link?: string;
+  gallery?: { src: string; caption: string }[];
 };
 
 const PROJECTS: Project[] = [
+  {
+    id: "vms",
+    title: "Intelligent Video Management System",
+    subtitle: "Variphi · AI surveillance platform · open source",
+    year: "2026",
+    tags: ["Computer Vision", "FastAPI", "Real-time Video", "Self-hosted"],
+    category: "engineering",
+    image: "/surveillance.png",
+    link: "https://github.com/VariPhiGen/Intelligent-Video-Management-System",
+    shortDesc:
+      "A self-hosted NVR with AI built in — ONVIF discovery, 24/7 recording, object / plate / face detection, and plain-English forensic search across weeks of footage. Shipped to an industrial client, then open-sourced under AGPL-3.0.",
+    problem:
+      "An industrial site was running nine cameras into a vendor NVR that could record and nothing else. Finding one truck at one gate meant a person scrubbing hours of night footage. Cloud VMS products solved the search problem, but the footage legally could not leave the premises — and per-camera licensing made them unaffordable the moment the site wanted to grow past nine.",
+    solution:
+      "A VMS that runs entirely on the customer’s own hardware via Docker Compose, split into microservices along the seams that actually matter: one RTSP pull per camera through a MediaMTX relay, a frame broker that decodes each stream exactly once and shares the pixels, continuous 60-second codec-copy recording, and YOLO-via-OpenVINO analytics that runs on ordinary CPUs. CLIP embeddings in pgvector turn “white truck at the weighbridge after dark” into a query instead of an afternoon.",
+    role: "Product owner & lead engineer — end to end, from camera ingest to console",
+    stack: [
+      "FastAPI",
+      "React",
+      "YOLO",
+      "OpenVINO",
+      "CLIP",
+      "PostgreSQL + pgvector",
+      "Valkey/Redis",
+      "MediaMTX",
+      "ffmpeg",
+      "Keycloak",
+      "Docker",
+    ],
+    process: [
+      "Started at the camera, not the UI. ONVIF discovery, encrypted credentials, and a single Postgres table covering a camera’s whole lifecycle — discovered, registered, streaming, offline. Every service above it reads one source of truth.",
+      "Made CPU the design constraint on purpose. One decode per camera in a shared frame broker, recording by codec-copy with zero re-encode, sub-stream for storage and main-stream for viewing, detection through OpenVINO. Nine cameras with live AI on a box with no GPU.",
+      "Built the console as an operator tool, not a dashboard. Live grid at ~2–4s behind real time, click-to-expand and Esc to return, tiles that reconnect themselves, five tiers of role-based access and full audit logging — because the people reviewing footage and the people configuring cameras are never the same people.",
+    ],
+    challenge:
+      "Latency, storage and AI pull in opposite directions: low-latency live view wants short segments, recording wants long ones, and analytics wants decoded frames — by far the most expensive thing in the pipeline. The fix was to stop treating them as three pipelines. MediaMTX pulls each camera exactly once; the NVR writes MPEG-TS segments by codec-copy so recording costs almost nothing; the frame broker decodes that same single stream and fans the pixels out to motion, detection and embedding consumers. HEVC→H.264 transcode happens only at extraction time, for the handful of clips a human actually exports.",
+  },
+  {
+    id: "event-agent",
+    title: "Live Event Assistant",
+    subtitle: "Variphi · RAG agent over a live event stream",
+    year: "2026",
+    tags: ["RAG", "LLM", "Embeddings", "Real-time"],
+    category: "ai",
+    image: "/ai-assistant-dashboard.png",
+    gallery: [
+      {
+        src: "/ai-assistant-chat.png",
+        caption:
+          "An aggregate question answered in one turn — counts broken out by violation type, plus a real sample event with location, timestamp and resolution status so the operator can verify it against the footage.",
+      },
+    ],
+    shortDesc:
+      "A chat assistant docked inside a live surveillance analytics dashboard. Ask “which location had the most events today?” in plain English and get counts, breakdowns and a verifiable sample event — instead of setting four filters and doing the arithmetic yourself.",
+    problem:
+      "The analytics dashboard was working exactly as designed: 6,835 events across 24 locations and a dozen violation types, all filterable. But every question an operator actually had — which gate is worst today, what did that camera catch last, is stray parking getting worse — meant picking a date range, selecting locations, reading four charts and doing the counting in your head. The data was all there and nobody was asking it anything.",
+    solution:
+      "An assistant docked into the dashboard that answers in plain English. Events are embedded as they land, so the index trails the live stream by seconds rather than a nightly batch; a question retrieves the relevant slice and the model composes the answer around aggregates the database computed. The model layer is pluggable — a self-hosted open model when event data is not allowed to leave the customer’s hardware, OpenAI when it is.",
+    role: "AI engineer — retrieval pipeline, agent layer and the chat surface",
+    stack: [
+      "RAG",
+      "Embeddings",
+      "Vector search",
+      "Self-hosted LLM",
+      "OpenAI API",
+      "FastAPI",
+      "React",
+      "PostgreSQL",
+    ],
+    process: [
+      "Started from the questions, not the model. Watched what operators were already doing with the filters for a week — nearly all of it collapsed into four shapes: most/least by location, latest by camera, counts by violation type, and what happened inside a window. Retrieval got built for those four, properly, instead of for everything badly.",
+      "Embedded events at write time rather than batch-indexing overnight. An event is searchable seconds after the camera sees it — which is the entire point. An assistant that can only answer about yesterday is just a report with a chat box on it.",
+      "Made every answer auditable. Responses carry the numbers that were counted and a real sample event — location, timestamp, resolution status — so an operator can click through to the footage rather than take a paragraph on faith.",
+    ],
+    challenge:
+      "Grounding. Hand an LLM a pile of retrieved events and it will cheerfully miscount them or invent a camera that was never installed — and counting is both the thing language models are worst at and exactly what “which location had the most events today” is asking for. So the counting moved out of the model entirely: retrieval returns aggregates computed in the database, and the model’s job is narrowed to phrasing them and choosing a representative example. It reads like a conversation, but the numbers in it are never the model’s opinion.",
+  },
   {
     id: "social",
     title: "Social Media Platform",
@@ -97,6 +176,7 @@ const PROJECTS: Project[] = [
 
 const FILTERS = [
   { id: "all", label: "All work" },
+  { id: "ai", label: "AI agents" },
   { id: "design", label: "Design" },
   { id: "engineering", label: "Engineering" },
   { id: "fullstack", label: "Fullstack" },
@@ -165,6 +245,35 @@ function ProjectCard({ project, onOpen, index }: { project: Project; onOpen: (p:
             }}
           >
             screenshot coming soon
+          </div>
+        )}
+
+        {project.link && (
+          <div
+            style={{
+              position: "absolute",
+              top: 12,
+              left: 12,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              fontSize: 10,
+              fontFamily: "ui-monospace, Menlo, monospace",
+              padding: "4px 10px",
+              borderRadius: 999,
+              background: "rgba(3,0,20,0.7)",
+              border: "1px solid var(--violet-border)",
+              color: "var(--lavender)",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.9 3.17 9.05 7.57 10.52.55.1.75-.24.75-.53v-1.9c-3.08.67-3.73-1.3-3.73-1.3-.5-1.29-1.23-1.63-1.23-1.63-1-.69.08-.67.08-.67 1.11.08 1.7 1.15 1.7 1.15.99 1.7 2.6 1.21 3.23.92.1-.72.39-1.21.7-1.49-2.46-.28-5.05-1.23-5.05-5.48 0-1.21.43-2.2 1.14-2.98-.11-.28-.5-1.41.11-2.94 0 0 .93-.3 3.05 1.14a10.6 10.6 0 0 1 5.56 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.53.22 2.66.11 2.94.71.78 1.14 1.77 1.14 2.98 0 4.26-2.6 5.2-5.07 5.47.4.35.76 1.03.76 2.08v3.08c0 .3.2.64.76.53a11.11 11.11 0 0 0 7.56-10.52C23.1 5.33 18.27.5 12 .5Z" />
+            </svg>
+            Open source
           </div>
         )}
 
@@ -432,6 +541,48 @@ function CaseStudyModal({ project, onClose }: { project: Project; onClose: () =>
             >
               {project.subtitle} · {project.year}
             </div>
+            {project.link && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  marginTop: 16,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "8px 16px",
+                  borderRadius: 999,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  fontFamily: "ui-monospace, Menlo, monospace",
+                  color: "var(--fg-1)",
+                  textDecoration: "none",
+                  background: "rgba(112,66,248,0.2)",
+                  border: "1px solid var(--violet-soft)",
+                  backdropFilter: "blur(6px)",
+                  WebkitBackdropFilter: "blur(6px)",
+                  transition: "border 200ms ease, background 200ms ease, transform 200ms ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--violet-glow)";
+                  e.currentTarget.style.background = "rgba(112,66,248,0.32)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--violet-soft)";
+                  e.currentTarget.style.background = "rgba(112,66,248,0.2)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.9 3.17 9.05 7.57 10.52.55.1.75-.24.75-.53v-1.9c-3.08.67-3.73-1.3-3.73-1.3-.5-1.29-1.23-1.63-1.23-1.63-1-.69.08-.67.08-.67 1.11.08 1.7 1.15 1.7 1.15.99 1.7 2.6 1.21 3.23.92.1-.72.39-1.21.7-1.49-2.46-.28-5.05-1.23-5.05-5.48 0-1.21.43-2.2 1.14-2.98-.11-.28-.5-1.41.11-2.94 0 0 .93-.3 3.05 1.14a10.6 10.6 0 0 1 5.56 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.53.22 2.66.11 2.94.71.78 1.14 1.77 1.14 2.98 0 4.26-2.6 5.2-5.07 5.47.4.35.76 1.03.76 2.08v3.08c0 .3.2.64.76.53a11.11 11.11 0 0 0 7.56-10.52C23.1 5.33 18.27.5 12 .5Z" />
+                </svg>
+                View source
+              </a>
+            )}
           </div>
         </div>
 
@@ -563,6 +714,54 @@ function CaseStudyModal({ project, onClose }: { project: Project; onClose: () =>
             </div>
           </div>
 
+          {project.gallery && project.gallery.length > 0 && (
+            <div style={{ marginBottom: 36 }}>
+              <div
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "var(--fg-4)",
+                  fontFamily: "ui-monospace, Menlo, monospace",
+                  marginBottom: 16,
+                }}
+              >
+                A closer look
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                {project.gallery.map((shot) => (
+                  <figure key={shot.src} style={{ margin: 0 }}>
+                    <div
+                      style={{
+                        borderRadius: 12,
+                        overflow: "hidden",
+                        border: "1px solid var(--border-soft)",
+                        background: "var(--editor-bg)",
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={shot.src}
+                        alt={shot.caption}
+                        style={{ width: "100%", height: "auto", display: "block" }}
+                      />
+                    </div>
+                    <figcaption
+                      style={{
+                        marginTop: 10,
+                        fontSize: 13,
+                        lineHeight: 1.6,
+                        color: "var(--fg-4)",
+                      }}
+                    >
+                      {shot.caption}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div
             style={{
               padding: "20px 24px",
@@ -636,8 +835,8 @@ const Projects = () => {
       >
         <div style={{ maxWidth: 620 }}>
           <h2 style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em", color: "var(--fg-1)", margin: 0, lineHeight: 1.05 }}>
-            Three projects, <br />
-            <span className="text-gradient-projects">three different problems.</span>
+            Five projects, <br />
+            <span className="text-gradient-projects">five different problems.</span>
           </h2>
           <p style={{ marginTop: 14, fontSize: 16, color: "var(--fg-4)", lineHeight: 1.6 }}>
             Click any card to read the case study — problem, process, stack, and the hard part I had to solve.
