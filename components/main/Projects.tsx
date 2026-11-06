@@ -24,6 +24,55 @@ type Project = {
 
 const PROJECTS: Project[] = [
   {
+    id: "operations-ai",
+    title: "Operations AI",
+    subtitle: "Support operations · AI investigations with human approval",
+    year: "2026",
+    tags: ["AI Agents", "LangGraph", "MCP", "FastAPI"],
+    category: "ai",
+    image: "/operations-ai-overview.png",
+    link: "https://github.com/Deepak15deadsec/operations-ai-refunds",
+    shortDesc:
+      "A support console where an AI agent investigates tickets and proposes refunds. Backend rules validate each proposal, a supervisor approves it, and an idempotent executor records the simulated change once — with a live timeline and audit trail.",
+    problem:
+      "Investigating a support ticket means checking orders, delivery history and refund policy before deciding what to do. An AI assistant can gather that context, but a recommendation still needs validation, human review and protection against duplicate actions.",
+    solution:
+      "A read-only investigation agent connected to tenant-scoped MCP tools. It returns a structured proposal; backend policy recomputes eligibility and amount; LangGraph pauses for supervisor approval. A PostgreSQL checkpointer preserves the workflow across restarts, while the console streams progress and exposes approvals, the mock ledger and audit history.",
+    role: "Fullstack & AI engineer",
+    stack: [
+      "LangChain",
+      "LangGraph",
+      "MCP",
+      "FastAPI",
+      "Pydantic",
+      "SQLAlchemy",
+      "PostgreSQL",
+      "Next.js",
+      "Tailwind CSS",
+      "Keycloak",
+      "Docker",
+    ],
+    process: [
+      "Separated investigation, policy validation, approval and execution. The agent can read context and propose an action; eligibility and refund amounts are computed by backend rules.",
+      "Made approval a durable workflow step, with PostgreSQL checkpoints and a leased job queue. Server-sent events feed the live timeline, with event replay after reconnects.",
+      "Added tenant-scoped tool access, role-based review and an append-only audit trail. An offline demo model exercises the same tools and structured output without an API key; automated tests, evaluation scenarios and a Playwright flow cover the system.",
+    ],
+    gallery: [
+      {
+        src: "/operations-ai-approvals.png",
+        caption:
+          "The supervisor approval queue, where proposed actions are reviewed before execution.",
+      },
+      {
+        src: "/operations-ai-run.png",
+        caption:
+          "An investigation timeline showing the agent's progress and the proposed action awaiting review.",
+      },
+    ],
+    challenge:
+      "Binding a human approval to exactly the action that was reviewed, even across retries and restarts. Each approval carries the action's SHA-256 fingerprint, database triggers keep proposal payloads immutable, and unique constraints prevent duplicate refunds. All effects are simulated in PostgreSQL; real providers would need a transactional outbox and provider-side idempotency.",
+  },
+  {
     id: "vms",
     title: "Intelligent Video Management System",
     subtitle: "Variphi · AI surveillance platform · open source",
@@ -835,8 +884,8 @@ const Projects = () => {
       >
         <div style={{ maxWidth: 620 }}>
           <h2 style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em", color: "var(--fg-1)", margin: 0, lineHeight: 1.05 }}>
-            Five projects, <br />
-            <span className="text-gradient-projects">five different problems.</span>
+            Six projects, <br />
+            <span className="text-gradient-projects">six different problems.</span>
           </h2>
           <p style={{ marginTop: 14, fontSize: 16, color: "var(--fg-4)", lineHeight: 1.6 }}>
             Click any card to read the case study — problem, process, stack, and the hard part I had to solve.
